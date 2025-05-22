@@ -16,7 +16,8 @@ fun MainScreen(
     onShowDetails: (String, String) -> Unit,
     onShowBookings: () -> Unit,
     onShowMap: () -> Unit,
-    onShowFavorites: () -> Unit
+    onShowFavorites: () -> Unit,
+    onShowNews: () -> Unit // ✅ Добавлен параметр
 ) {
     val viewModel: CarViewModel = koinViewModel()
     val cars by viewModel.cars.collectAsState()
@@ -63,6 +64,15 @@ fun MainScreen(
             Button(onClick = onShowFavorites, modifier = Modifier.weight(1f)) {
                 Text("Избранное ❤️")
             }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Button(
+            onClick = onShowNews,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Новости авто 📰") // ✅ Новая кнопка
         }
 
         Spacer(Modifier.height(16.dp))

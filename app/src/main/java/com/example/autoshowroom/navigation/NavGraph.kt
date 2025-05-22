@@ -9,6 +9,7 @@ import com.example.autoshowroom.presentation.detail.CarDetailScreen
 import com.example.autoshowroom.presentation.bookings.MyBookingsScreen
 import com.example.autoshowroom.presentation.map.DealershipMapScreen
 import com.example.autoshowroom.presentation.favorites.FavoritesScreen
+import com.example.autoshowroom.presentation.news.NewsScreen // ✅ добавлено
 
 object Routes {
     const val MAIN = "main"
@@ -16,6 +17,7 @@ object Routes {
     const val BOOKINGS = "bookings"
     const val MAP = "map"
     const val FAVORITES = "favorites"
+    const val NEWS = "news" // ✅ добавлено
 }
 
 @Composable
@@ -34,6 +36,9 @@ fun AppNavGraph(navController: NavHostController) {
                 },
                 onShowFavorites = {
                     navController.navigate(Routes.FAVORITES)
+                },
+                onShowNews = { // ✅ новая кнопка
+                    navController.navigate(Routes.NEWS)
                 }
             )
         }
@@ -54,6 +59,9 @@ fun AppNavGraph(navController: NavHostController) {
                     navController.navigate("detail/$make/$model")
                 }
             )
+        }
+        composable(Routes.NEWS) { // ✅ экран новостей
+            NewsScreen()
         }
     }
 }

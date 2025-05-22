@@ -3,11 +3,10 @@ package com.example.autoshowroom.di
 import androidx.room.Room
 import com.example.autoshowroom.data.local.AppDatabase
 import com.example.autoshowroom.data.network.CarApi
+import com.example.autoshowroom.data.network.NewsApi
 import com.example.autoshowroom.data.repository.CarRepository
-import com.example.autoshowroom.viewmodel.BookingViewModel
-import com.example.autoshowroom.viewmodel.CarDetailViewModel
-import com.example.autoshowroom.viewmodel.CarViewModel
-import com.example.autoshowroom.viewmodel.FavoritesViewModel
+import com.example.autoshowroom.data.repository.NewsRepository
+import com.example.autoshowroom.viewmodel.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,17 +18,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
 
-    // API Interceptor
+    // --- Интерцептор для Car API ---
     single {
         Interceptor { chain ->
             val request: Request = chain.request().newBuilder()
-                .addHeader("X-Api-Key", "N4PPpXEguW0b2Z3xJhJHwA==UJ4GzNDWep4xG9LD")
+                .addHeader("X-Api-Key", "N4PPpXEguW0b2Z3xJhJHwA==UJ4GzNDWep4xG9LD") // Car API key
                 .build()
             chain.proceed(request)
         }
     }
 
-    // HTTP client
+    // --- HTTP клиент ---
     single {
         OkHttpClient.Builder()
             .addInterceptor(get<Interceptor>())
@@ -39,7 +38,7 @@ val appModule = module {
             .build()
     }
 
-    // Retrofit
+    // --- Car API ---
     single {
         Retrofit.Builder()
             .baseUrl("https://api.api-ninjas.com/")
@@ -49,23 +48,34 @@ val appModule = module {
             .create(CarApi::class.java)
     }
 
-    // Room database
+    // --- News API ---
+    single {
+        Retrofit.Builder()
+            .baseUrl("https://newsapi.org/v2/") // ✅ Важно: /v2/
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NewsApi::class.java)
+    }
+
+    // --- Room база данных ---
     single {
         Room.databaseBuilder(get(), AppDatabase::class.java, "autoshowroom_db")
             .fallbackToDestructiveMigration()
             .build()
     }
 
-    // DAOs
+    // --- DAO ---
     single { get<AppDatabase>().bookedCarDao() }
     single { get<AppDatabase>().favoriteCarDao() }
 
-    // Repository
-    single { CarRepository(get(), get(), get()) } // api, bookedDao, favoriteDao
+    // --- Репозитории ---
+    single { CarRepository(get(), get(), get()) }
+    single { NewsRepository(get()) }
 
-    // ViewModels
+    // --- ViewModels ---
     viewModel { CarViewModel(get()) }
     viewModel { CarDetailViewModel(get()) }
     viewModel { BookingViewModel(get()) }
     viewModel { FavoritesViewModel(get()) }
+    viewModel { NewsViewModel(get()) }
 }
