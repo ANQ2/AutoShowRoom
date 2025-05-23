@@ -34,9 +34,9 @@ fun MainScreen(
         viewModel.loadCars(make, model)
     }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(35.dp)) {
         Text("Фильтр автомобилей", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(20.dp))
 
         OutlinedTextField(
             value = make, onValueChange = { make = it }, label = { Text("Марка") },
